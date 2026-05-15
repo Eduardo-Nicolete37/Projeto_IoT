@@ -79,7 +79,113 @@ Refere-se a Javascript Object Notation, é um formato otimizado para troca de da
 Se baseia em simplesmente uma chave e o que a chave recebe, como por exemplo:
 
 ```json
+
+
 {
   "rua": "Dr. Angelino Sanches",
   "numero": "800"
 }
+```
+
+---
+
+## PARTE 2 — DOCUMENTAÇÃO DOS ENDPOINTS/ROTAS
+
+Esta é a seção técnica da documentação, detalhando como interagir com a API de monitoramento de sensores.
+
+### 1. Listar Todos os Dados
+* **Método e Rota:** `GET /api/dados`
+* **Descrição:** Retorna o array completo com todo o histórico de sensores armazenado.
+* **Parâmetros:** Nenhum.
+* **Exemplo de Requisição:** `GET http://localhost:3000/api/dados`
+* **Resposta de Sucesso:**
+    * **Status Code:** 200 OK
+    * **Body:**
+        ```json
+        [
+          { "id": 1, "temperatura": 30, "umidade": 40, "hora": "09:03" },
+          { "id": 2, "temperatura": 27, "umidade": 50, "hora": "10:03" },
+          { "id": 3, "temperatura": 26, "umidade": 35, "hora": "11:03" }
+        ]
+        ```
+
+---
+
+### 2. Buscar Dado Específico
+* **Método e Rota:** `GET /api/dados/:id`
+* **Descrição:** Busca e retorna as informações de um único registro através do ID.
+* **Parâmetros:** `id` (parâmetro de rota).
+* **Exemplo de Requisição:** `GET http://localhost:3000/api/dados/1`
+* **Resposta de Sucesso:**
+    * **Status Code:** 200 OK
+    * **Body:**
+        ```json
+        { "id": 1, "temperatura": 30, "umidade": 40, "hora": "09:03" }
+        ```
+* **Resposta de Erro:**
+    * **Status Code:** 404 Not Found
+    * **Body:** `{ "mensagem": "ID não encontrado!" }`
+
+---
+
+### 3. Criar Novo Registro
+* **Método e Rota:** `POST /api/dados`
+* **Descrição:** Recebe dados de temperatura, umidade e hora para salvar um novo registro.
+* **Parâmetros:** Body em JSON contendo `temperatura`, `umidade` e `hora`.
+* **Exemplo de Requisição:** `POST http://localhost:3000/api/dados`
+    * **Body:**
+        ```json
+        {
+          "temperatura": 28,
+          "umidade": 45,
+          "hora": "12:00"
+        }
+        ```
+* **Resposta de Sucesso:**
+    * **Status Code:** 201 Created
+    * **Body:**
+        ```json
+        {
+          "mensagem": "Dados enviados com sucesso!",
+          "dados": { "id": 4, "temperatura": 28, "umidade": 45, "hora": "12:00" }
+        }
+        ```
+* **Resposta de Erro:**
+    * **Status Code:** 400 Bad Request
+    * **Body:** `{ "mensagem": "Dados incompletos!" }`
+
+---
+
+### 4. Atualizar Registro
+* **Método e Rota:** `PUT /api/dados/:id`
+* **Descrição:** Substitui as informações de um registro existente baseado no ID.
+* **Parâmetros:** `id` (rota) e Body em JSON.
+* **Exemplo de Requisição:** `PUT http://localhost:3000/api/dados/2`
+    * **Body:**
+        ```json
+        {
+          "temperatura": 22,
+          "umidade": 55,
+          "hora": "15:30"
+        }
+        ```
+* **Resposta de Sucesso:**
+    * **Status Code:** 200 OK
+    * **Body:** `{ "mensagem": "Dados atualizados com sucesso!" }`
+* **Resposta de Erro:**
+    * **Status Code:** 404 Not Found
+    * **Body:** `{ "mensagem": "Não é possivel atualizar algo inexistente!" }`
+
+---
+
+### 5. Deletar Registro
+* **Método e Rota:** `DELETE /api/dados/:id`
+* **Descrição:** Remove um registro do banco de dados através do ID informado.
+* **Parâmetros:** `id` (parâmetro de rota).
+* **Exemplo de Requisição:** `DELETE http://localhost:3000/api/dados/3`
+* **Resposta de Sucesso:**
+    * **Status Code:** 200 OK
+    * **Body:** `{ "mensagem": "Dados excluidos com sucesso!" }`
+* **Resposta de Erro:**
+    * **Status Code:** 404 Not Found
+    * **Body:** `{ "mensagem": "Não é possivel deletar algo inexistente!" }`
