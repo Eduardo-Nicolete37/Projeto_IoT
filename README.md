@@ -1,6 +1,8 @@
-# Pesquisa Conceitual – ARI
+# Documentação da API REST
 
-## O que é uma API?
+## 1° PARTE - Pesquisa Conceitual
+
+### O que é uma API?
 A sigla API se refere a “Application Programming Interface”. Em português “Interface de Programação de Aplicações”. Ela é utilizada como um intermediário para o banco de dados e o cliente. Algo similar a um Shell, o cliente faz um pedido, o Shell envia para o “fala” com o Kernel, o Kernel responde e o Shell te devolve a resposta. Também pode ser imaginado como uma relação de Cliente X Garçom X Cozinha.
 
 A API se tornou uma das bases da TI na atualidade, sendo de grande importância para diversos projetos na área de:
@@ -12,7 +14,7 @@ A API se tornou uma das bases da TI na atualidade, sendo de grande importância 
 
 ---
 
-## O que é REST e como se conecta com API?
+### O que é REST e como se conecta com API?
 Se referindo a Representational State Transfer, ou Transferência de Estado Representacional, tratando-se de um estilo de arquitetura de Software, se baseando em um conjunto de restrições e princípios para o desenvolvimento de serviços web escaláveis, de forma que seja fácil de manter e simples de usar.
 
 Foi criada por Roy Fielding e seu doutorado de 2000, REST não se resume em um simples protocolo ou tecnologia, mas sim se mostra ser uma verdadeira abstração de arquitetura web, visando atingir a melhor forma de comunicação entre sistemas distribuídos.
@@ -24,7 +26,7 @@ Para que uma API seja considerada RESTful, ela precisa seguir alguns princípios
 
 ---
 
-## O que é CRUD?
+### O que é CRUD?
 Em resumo, CRUD é um acrônimo para Create, Read, Update, Delete. Sendo as 4 funções fundamentais de um sistema de manipulação de dados. Tais ações são os pilares fundamentais de toda a área de Desenvolvimento de Sistemas, permitindo toda e qualquer mudança e tratamento de dados de um banco de dados.
 
 Foi visto pela primeira vez no livro “Principles of Database Management Systems”, publicado em 1976 por James Martin.
@@ -53,7 +55,7 @@ Já o Status Code são números dentro do protocolo HTTP, usados para que o serv
 
 | Categoria | Código e Nome | Descrição |
 | :--- | :--- | :--- |
-| **1xx** | 100 Continue | O servidor deu o "ok" para você enviar o corpo da mensagem (muito usado em uploads grandes). |
+| **1xx** | 100 Continue | O servidor deu o "ok" para você enviar o corpo da mensagem (muito usado em uploads grandes). | 
 | **1xx** | 101 Switching Protocols | Comum quando você tenta estabelecer uma conexão WebSocket. |
 | **2xx** | 200 OK | O sucesso padrão. |
 | **2xx** | 201 Created | Sucesso após um POST ou PUT que criou um novo recurso (ex: novo usuário cadastrado). |
@@ -71,6 +73,7 @@ Já o Status Code são números dentro do protocolo HTTP, usados para que o serv
 | **5xx** | 503 Service Unavailable | O servidor está sobrecarregado ou em manutenção. |
 | **5xx** | 504 Gateway Timeout | O servidor demorou tanto para responder que a conexão caiu. |
 
+- **DICA** - No site "https://http.cat/" há imagem de gatos ilustrando cada mensagem de erro e explicando-as
 ---
 
 ## O que é JSON?
@@ -89,7 +92,7 @@ Se baseia em simplesmente uma chave e o que a chave recebe, como por exemplo:
 
 ---
 
-## PARTE 2 — DOCUMENTAÇÃO DOS ENDPOINTS/ROTAS
+## 2° PARTE — DOCUMENTAÇÃO DOS ENDPOINTS/ROTAS
 
 Esta é a seção técnica da documentação, detalhando como interagir com a API de monitoramento de sensores.
 
@@ -189,3 +192,80 @@ Esta é a seção técnica da documentação, detalhando como interagir com a AP
 * **Resposta de Erro:**
     * **Status Code:** 404 Not Found
     * **Body:** `{ "mensagem": "Não é possivel deletar algo inexistente!" }`
+
+## 3° PARTE - DIAGRAMA DA ARQUITETURA
+
+Para compreender como as informações transitam desde a captura física até a visualização final, a arquitetura do sistema foi desenhada seguindo o modelo abaixo:
+
+### Diagrama de Infraestrutura
+<img width="1043" height="675" alt="image" src="https://github.com/user-attachments/assets/e33dcba4-0bdf-48ec-a19e-679c1a63de54" />
+> O diagrama ilustra a comunicação entre o hardware (sensores), o processamento (ESP-32), o armazenamento e a interface de consumo (Cliente).
+
+### Detalhamento do Fluxo
+1.  **Captura (Sensores):** Os sensores de **Umidade** e **Temperatura** realizam a leitura das grandezas físicas. O microcontrolador **ESP-32** utiliza o método `GET` para buscar esses valores dos sensores.
+2.  **Processamento e Envio:** Após coletar os dados, o **ESP-32** atua como um cliente HTTP, realizando um `POST` para enviar as informações formatadas para o **Banco de Dados**.
+3.  **Servidor de Aplicação (API):** O servidor construído em **Node.js** funciona como a ponte inteligente (Back-end). Ele se comunica com o Banco de Dados através de métodos `GET/POST` para gerenciar o histórico.
+4.  **Consumo (Cliente):** O usuário final (**Cliente**) interage com a **API** via requisições HTTP (`GET` para visualizar e `POST` para enviar comandos/dados), recebendo as informações processadas em formato JSON.
+
+---
+## 4° PARTE -  COMO RODAR E REFLEXÃO
+
+Aqui está o conteúdo solicitado, pronto para ser adicionado ao seu arquivo README.md.
+
+Markdown
+---
+
+## PARTE 4 — GUIA DE EXECUÇÃO E TECNOLOGIAS
+
+### 4.1 Como Rodar o Projeto
+
+Siga os passos abaixo para configurar e executar a API em seu ambiente local:
+
+**Pré-requisitos:**
+* **Node.js:** Versão 18.x ou superior.
+* **Gerenciador de pacotes:** NPM (instalado automaticamente com o Node).
+
+**Passo a Passo:**
+1. **Instalar dependências:** No terminal, dentro da pasta do projeto, execute:
+   ```bash
+   npm install
+   ```
+2. **Executar o servidor:** Inicie a aplicação com o comando:
+   ```bash
+   node server.js
+   ```
+3. **Verificar funcionamento:**
+Verificar funcionamento: Se tudo estiver correto, o terminal exibirá a mensagem: Servidor rodando na porta 3000. Você também pode acessar http://localhost:3000/api/dados no seu navegador para ver o JSON inicial.
+
+Como Testar (via Postman):
+
+- Abra o Postman e crie uma nova requisição.
+
+- Selecione o método POST e insira a URL http://localhost:3000/api/dados.
+
+- Vá na aba Body, selecione a opção raw e mude o tipo para JSON.
+
+- Cole o seguinte exemplo e clique em Send:
+ ```json
+        {
+  "temperatura": 25,
+  "umidade": 60,
+  "hora": "14:30"
+}
+ ```
+- Verifique se recebeu o Status 201 Created e a mensagem de sucesso.
+  
+### 4.2 Tecnologias Usadas
+Node.js: Ambiente de execução que permite rodar código JavaScript no lado do servidor (backend).
+
+Express.js: Framework minimalista para Node.js que facilita a criação de rotas HTTP e o gerenciamento de requisições.
+
+CORS: Middleware utilizado para permitir que a API seja acessada por diferentes domínios (importante para integração com front-end).
+
+JSON (JavaScript Object Notation): Formato leve para troca de dados entre o cliente e o servidor, sendo o padrão de comunicação desta API.
+
+NPM (Node Package Manager): Gerenciador de pacotes utilizado para instalar e organizar as bibliotecas externas do projeto.
+
+### 4.3 Avaliação Pessoal
+Gostei do projeto, foi estranho usar uma linguagem que nunca usei de fato (Javascript), mas não foi uma experiencia ruim. Espero poder repetir a experiencia, e não tive grandes dificuldades.
+   
